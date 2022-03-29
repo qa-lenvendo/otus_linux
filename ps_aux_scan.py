@@ -4,14 +4,14 @@ from datetime import datetime
 # выполняем команду и получаем результат
 result = Popen(['ps', 'aux'], stdout=PIPE)
 res = []
-count_line = 1
+count_line = 0
 
 # проходим построчно по результату и формируем список словарей
 while True:
     line = result.stdout.readline().decode('utf-8')
     if not line:
         break
-    if count_line > 1:
+    if count_line > 0:
         line_lst = line.split()
         count = 0
         command_lst = []
@@ -39,10 +39,10 @@ for user in users:
     users_process.update({user: count_process})
 
 # вычисляем общее значение занимаемой памяти
-all_mem = sum([float(x['%MEM']) for x in res])
+all_mem = '{:.2f}'.format(sum([float(x['%MEM']) for x in res]))
 
 # вычисляем общее значение занимаемого процессора
-all_cpu = sum([float(x['%CPU']) for x in res])
+all_cpu = '{:.2f}'.format(sum([float(x['%CPU']) for x in res]))
 
 # вычисляем процесс занимающий максимальный объем памяти
 max_mem = [i['COMMAND'] for i in res if float(i['%MEM']) == max([float(x['%MEM']) for x in res])][0][:20]
